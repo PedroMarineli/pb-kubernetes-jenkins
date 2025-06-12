@@ -1,5 +1,4 @@
-proximos passo
-
+proximos passo teste
 pegar tudo que o thiago ensinou e passou e ja com o Jenkins na maquina instalado agora vamos ter que subir essa pequena aplicação
 
 aqui deixei pistas para descubrir como subir a aplicação
