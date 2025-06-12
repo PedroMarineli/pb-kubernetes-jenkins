@@ -29,4 +29,4 @@ Publique o container no Dockerhub (esteja logado) (coloque o seu usuário)
 ```bash
   docker push SEU_USUARIO_DOCKERHUB/fastapi-backend:1
 ```
-
+teste
