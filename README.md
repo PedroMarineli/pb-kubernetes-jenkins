@@ -2,7 +2,7 @@
 
  
 
-Projeto para aprendizado com construção e deploy de uma aplicação (backend + frontend) com deploy no Kubernetes e automação CI/CD utilizando o Jenkins. 
+Projeto para aprendizado com construção e deploy de uma aplicação (backend) com deploy no Kubernetes e automação CI/CD utilizando o Jenkins. 
 
  
 
