@@ -87,4 +87,29 @@ Aplique o service
   kubectl apply -f backend/service.yaml
 ```
 
+## Deploy do jenkins no kubernetes
 
+- (Arquivos Dockerfile e .yaml estarao no diretorio /jenkins)
+- Faca build e push da imagem do jenkins no Dockerhub 
+- crie um diretorio `/data/jenkins-volume` no seu cluster (para o volume persistente)
+
+Aplique o arquivos .yaml
+
+```bash
+  kubectl apply -f jenkins/jenkins-pv.yaml
+  kubectl apply -f jenkins/jenkins-pvc.yaml
+  kubectl apply -f jenkins/jenkins-deploy.yaml
+  kubectl apply -f jenkins/jenkins-np.yaml
+```
+
+Para pegar a chave secreta do jenkins:
+
+```bash
+  kubectl exec -it <nome-do-pod-jenkins> -- cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+No jenkins, instale os seguintes plugins:
+
+- Docker
+- Docker Pipeline
+- Kubernetes CLI
