@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      securityContext:
+        fsGroup: 1000
+      
+      initContainers:
+      - name: volume-permissions
+        image: busybox
+        command: ["sh", "-c", "chown -R 1000:1000 /var/jenkins_home && chmod -R 777 /var/jenkins_home"]
+        volumeMounts:
+        - name: jenkins-data
+          mountPath: /var/jenkins_home
+
+      - name: fix-docker-permissions
+        image: busybox
+        command: ["sh", "-c", "chown root:root /var/run/docker.sock && chmod 666 /var/run/docker.sock"]
+        volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+
+      containers:
+      - name: jenkins
+        image: pedromarineli/jenkinsdood:v3
+        securityContext:
+          privileged: true  
+        ports:
+        - containerPort: 8080
+        - containerPort: 50000
+        volumeMounts:
+        - name: jenkins-data
+          mountPath: /var/jenkins_home
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+
+      volumes:
+      - name: jenkins-data
+        persistentVolumeClaim:
+          claimName: jenkins-pvc
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock

@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerapp = docker.build("pedromarineli/fastapi-backend:${env.BUILD_ID}", '-f ./backend/Dockerfile ./backend')
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-cred') {
+                        dockerapp.push('latest')
+                        dockerapp.push("${env.BUILD_ID}")
+                    }
+                }
+            }
+        }     
+    }
+}

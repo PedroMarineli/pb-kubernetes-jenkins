@@ -1,133 +1,401 @@
-proximos passo teste
-pegar tudo que o thiago ensinou e passou e ja com o Jenkins na maquina instalado agora vamos ter que subir essa pequena aplicação
+# FastAPI + Jenkins + Kubernetes 
 
-aqui deixei pistas para descubrir como subir a aplicação
+ 
 
-------
+Projeto para aprendizado com construção e deploy de uma aplicação (backend + frontend) com deploy no Kubernetes e automação CI/CD utilizando o Jenkins. 
 
-<!DOCTYPE html>
-<html lang="pt-BR">
+ 
 
-<body>
-  <h1>Desafio DevOps com FastAPI e React 🚀</h1>
+## Stack utilizada 
 
-  <p>Este projeto tem como objetivo integrar <strong>um backend em FastAPI</strong> com <strong>um frontend em React</strong>, além de configurar CI/CD usando <strong>Jenkins</strong> e <strong>Kubernetes</strong> (via Rancher ou Minikube). É uma oportunidade de aprender na prática como criar, containerizar, automatizar e orquestrar aplicações modernas!</p>
+ 
 
-  <h2>🎯 Desafio</h2>
+**Back-end:** Python, FastAPI 
 
-  <h3>1️⃣ Backend - FastAPI</h3>
-  <ul>
-    <li>Crie 7 endpoints no backend:
-      <ul>
-        <li><code>/color</code> — Retorna uma cor aleatória para o fundo da página.</li>
-        <li><code>/cat</code> — Retorna uma imagem aleatória de gato.</li>
-        <li><code>/random-photo</code> — Retorna uma foto aleatória (ex.: via Picsum).</li>
-        <li><code>/time</code> — Retorna o horário atual do servidor.</li>
-        <li><code>/joke</code> — Redireciona para uma piada (use uma API pública).</li>
-        <li><code>/scare</code> — Retorna uma imagem de susto (ex.: GIF).</li>
-        <li><code>/lookalike</code> — Retorna uma imagem aleatória de “sósia”.</li>
-      </ul>
-    </li>
-    <li>Adicione suporte a <strong>CORS</strong> no FastAPI para permitir requisições do frontend.</li>
-  </ul>
+ 
 
-  <h3>2️⃣ Frontend - React</h3>
-  <ul>
-    <li>Crie uma interface simples que:
-      <ul>
-        <li>Mostra a cor de fundo retornada pelo backend.</li>
-        <li>Exibe a imagem aleatória de gato.</li>
-        <li>Exibe a foto aleatória.</li>
-        <li>Mostra o horário atual.</li>
-        <li>Inclui um botão “Susto” para exibir a imagem de susto.</li>
-        <li>Inclui um botão “Sósia” para exibir a imagem aleatória de “quem parece com você”.</li>
-      </ul>
-    </li>
-  </ul>
+**CI/CD:** Jenkins, Ngrok 
 
-  <h3>3️⃣ Containerização</h3>
-  <ul>
-    <li>Crie um <code>Dockerfile</code> para o backend.</li>
-    <li>Crie um <code>Dockerfile</code> para o frontend.</li>
-    <li>Suba as imagens no <strong>Docker Hub</strong> ou outro registry.</li>
-  </ul>
+ 
 
-  <h3>4️⃣ Integração com Jenkins</h3>
-  <ul>
-    <li>Configure um <code>Jenkinsfile</code> para:
-      <ul>
-        <li>Buildar as imagens Docker do backend e frontend.</li>
-        <li>Fazer push das imagens para o registry.</li>
-        <li>Aplicar os manifests no Kubernetes.</li>
-      </ul>
-    </li>
-  </ul>
+**Deploy:** Kubernetes 
 
-  <h3>5️⃣ Orquestração com Kubernetes</h3>
-  <ul>
-    <li>Crie manifestos Kubernetes para:
-      <ul>
-        <li>Deployments para backend e frontend.</li>
-        <li>Services para backend e frontend.</li>
-        <li>(Opcional) Um Ingress para rotear tudo bonitinho.</li>
-      </ul>
-    </li>
-  </ul>
+ 
 
-  <h2>🚀 Entregáveis</h2>
-  <ul>
-    <li>✅ Backend funcional no FastAPI.</li>
-    <li>✅ Frontend React consumindo os endpoints.</li>
-    <li>✅ Dockerfiles para cada app.</li>
-    <li>✅ Jenkinsfile com pipeline CI/CD.</li>
-    <li>✅ Deploy no Kubernetes local (Minikube ou Rancher).</li>
-  </ul>
+## Rodando localmente o backend no Docker + publicação no Dockerhub 
 
-  <h2>💡 Dicas</h2>
-  <ul>
-    <li>Use <code>uvicorn</code> com <code>--reload</code> no backend para desenvolver mais rápido.</li>
-    <li>Use <code>serve</code> para servir o build do React.</li>
-    <li>Para CORS, habilite todas as origens para dev (<code>allow_origins=["*"]</code>).</li>
-    <li>Use <code>kubectl apply -f</code> ou a interface do Rancher para aplicar os manifests.</li>
-    <li>Divirta-se — e assuste seus colegas com o endpoint <code>/scare</code>! 😱</li>
-  </ul>
+ 
 
-  <h2>📦 Estrutura sugerida</h2>
-  <pre><code>projeto-pb-automate/
-│
-├── backend/
-│   ├── main.py
-│   ├── requirements.txt
-│   └── Dockerfile
-│
-├── frontend/
-│   ├── package.json
-│   ├── src/
-│   │   └── App.js
-│   └── Dockerfile
-│
-└── Jenkinsfile
-  </code></pre>
+Faça o build da imagem (esteja no diretório backend) 
 
-  <h2>📝 Como rodar localmente</h2>
+ 
 
-  <h3>Backend</h3>
-  <pre><code>cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload --host 0.0.0.0 --port 8000</code></pre>
+```bash 
 
-  <h3>Frontend</h3>
-  <pre><code>cd frontend
-npm install
-npm start</code></pre>
+  docker build --no-cache -t fastapi-backend . 
 
-  <p><strong>Acesse:</strong></p>
-  <ul>
-    <li>Frontend: <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
-    <li>Backend: <a href="http://localhost:8000" target="_blank">http://localhost:8000</a></li>
-  </ul>
+``` 
 
-  <h2>🚨 Boa sorte e bom código! 🚨</h2>
-</body>
-</html>
-# pb-kubernetes-jenkins
+ 
+
+Execute o container (verifique as portas) 
+
+ 
+
+```bash 
+
+  docker run -d -p 127.0.0.1:8000:8000 --name fastapi-backend fastapi-backend 
+
+``` 
+
+ 
+
+Renomeie sua imagem para o padrão do Dockerhub (coloque o seu usuário) 
+
+ 
+
+```bash 
+
+  docker tag fastapi-backend SEU_USUARIO_DOCKERHUB/fastapi-backend:1 
+
+``` 
+
+ 
+
+Publique o container no Dockerhub (esteja logado) (coloque o seu usuário) 
+
+ 
+
+```bash 
+
+  docker push SEU_USUARIO_DOCKERHUB/fastapi-backend:1 
+
+``` 
+
+ 
+
+## Deploy do backend no kubernetes 
+
+ 
+
+arquivo deployment.yaml 
+
+ 
+
+```yaml 
+
+  apiVersion: apps/v1 
+
+  kind: Deployment 
+
+  metadata: 
+
+    name: fastapi-backend 
+
+    labels: 
+
+      app: fastapi-backend 
+
+  spec: 
+
+    replicas: 1 
+
+    selector: 
+
+      matchLabels: 
+
+        app: fastapi-backend 
+
+    template: 
+
+      metadata: 
+
+        labels: 
+
+          app: fastapi-backend 
+
+      spec: 
+
+        containers: 
+
+        - name: fastapi-backend 
+
+          image: pedromarineli/fastapi-backend:1 
+
+          ports: 
+
+          - containerPort: 8000 
+
+``` 
+
+ 
+
+arquivo service.yaml  
+
+ 
+
+```yaml 
+
+  apiVersion: v1 
+
+  kind: Service 
+
+  metadata: 
+
+    name: fastapi-service 
+
+  spec: 
+
+    type: NodePort 
+
+    selector: 
+
+      app: fastapi-backend 
+
+    ports: 
+
+      - protocol: TCP 
+
+        port: 8000 
+
+        targetPort: 8000 
+
+        nodePort: 30080 
+
+``` 
+
+ 
+
+Aplique o deployment 
+
+ 
+
+```bash 
+
+  kubectl apply -f backend/deployment.yaml 
+
+``` 
+
+ 
+
+Aplique o service 
+
+ 
+
+```bash 
+
+  kubectl apply -f backend/service.yaml 
+
+``` 
+
+ 
+
+## Deploy do jenkins no kubernetes 
+
+ 
+
+- (Arquivos Dockerfile e .yaml estarao no diretorio /jenkins) 
+
+- Faca build e push da imagem do jenkins no Dockerhub  
+
+- crie um diretorio `/data/jenkins-volume` no seu cluster (para o volume persistente) 
+
+ 
+
+Aplique o arquivos .yaml 
+
+ 
+
+```bash 
+
+  kubectl apply -f jenkins/jenkins-pv.yaml 
+
+  kubectl apply -f jenkins/jenkins-pvc.yaml 
+
+  kubectl apply -f jenkins/jenkins-deploy.yaml 
+
+  kubectl apply -f jenkins/jenkins-np.yaml 
+
+``` 
+
+ 
+
+Para pegar a chave secreta do jenkins: 
+
+ 
+
+```bash 
+
+  kubectl exec -it <nome-do-pod-jenkins> -- cat /var/jenkins_home/secrets/initialAdminPassword 
+
+``` 
+
+ 
+
+No jenkins, instale os seguintes plugins: 
+
+ 
+
+- Docker 
+
+- Docker Pipeline 
+
+- Kubernetes CLI 
+
+ 
+
+ 
+
+## Deploy automático com o jenkins + webhook  
+
+ 
+
+- Crie as credenciais do dockerhub (usuario e senha) e kubernetes (secret file, que é o arquivo kubeconfig do seu cluster, porém apontando para o servidor `https://kubernetes.default.svc`) no jenkins 
+
+ 
+
+ 
+
+Pipeline completa 
+
+ 
+
+```groovy 
+
+  pipeline { 
+
+      agent any 
+
+ 
+
+      stages { 
+
+          stage('Build Docker Image') { 
+
+              steps { 
+
+                  script { 
+
+                      dockerapp = docker.build("pedromarineli/fastapi-backend:${env.BUILD_ID}", '-f ./backend/Dockerfile ./backend') 
+
+                  } 
+
+              } 
+
+          } 
+
+ 
+
+          stage('Push Docker Image') { 
+
+              steps { 
+
+                  script { 
+
+                      docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-cred') { 
+
+                          dockerapp.push('latest') 
+
+                          dockerapp.push("${env.BUILD_ID}") 
+
+                      } 
+
+                  } 
+
+              } 
+
+          }    
+
+ 
+
+          stage('Deploy no Kubernetes') { 
+
+              environment { 
+
+                  tag_version = "${env.BUILD_ID}" 
+
+              } 
+
+              steps { 
+
+                  withKubeConfig([credentialsId: 'kubernetes-cred']) { 
+
+                      sh 'sed -i "s/{{tag}}/$tag_version/g" ./backend/deployment.yaml' 
+
+                      sh 'kubectl apply -f backend/deployment.yaml' 
+
+                  } 
+
+              } 
+
+          }    
+
+      } 
+
+  } 
+
+``` 
+
+ 
+
+- Ative o trigger `GitHub hook trigger for GITScm polling` nas configurações da sua pipeline 
+
+- Para expor nosso cluster publicamente, utilizaremos o ngrok (https://ngrok.com/) 
+
+- Faca o download para o seu SO, e crie uma conta gratuita 
+
+ 
+
+Ao executar o ngrok autentique com o token disponível na dashboard após o login e exponha o cluster (ngrok retornara uma url) 
+
+ 
+
+```bash 
+
+  ngrok config add-authtoken <token> 
+
+``` 
+
+```bash 
+
+  ngrok http http://localhost:32000 
+
+``` 
+
+ 
+
+- No github, vá para as configurações do seu repositório (que deve ser o mesmo utilizado pela pipeline, inclusive a mesma branch) e crie um webhook apontando para a  url do ngrok: `<urldongrok>/github-webhook/`, o content type deve ser `application/json` 
+
+- De um push no repositório e veja se a pipeline ativa automaticamente 
+
+ 
+
+ 
+
+## Screenshots 
+
+ 
+
+Jenkins 
+
+![ativacao automatica](img/push.png) 
+
+![triggers](img/triggers.png) 
+
+![config da pipeline](img/pipelinedefinition.png) 
+
+ 
+
+ngrok + github 
+
+![ngrok](img/ngrok.png) 
+
+![pipeline test](img/pipelinetest.png) 
+
+![webhook](img/webhook.png) 
+
+ 
+
+Kubernetes 
+
+![get all](img/getall.png) 
