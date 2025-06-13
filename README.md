@@ -399,7 +399,3 @@ ngrok + github
 Kubernetes 
 
 ![get all](img/getall.png) 
-
- 
-
- 
