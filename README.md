@@ -113,3 +113,71 @@ No jenkins, instale os seguintes plugins:
 - Docker
 - Docker Pipeline
 - Kubernetes CLI
+
+
+## Deploy automatico com o jenkins + webhook 
+
+- Crie as credenciais do dockerhub (usuario e senha) e kubernetes (secret file, que é o arquivo kubeconfig do seu cluster, porém apontando para o servidor `https://kubernetes.default.svc`) no jenkins
+
+
+Pipeline completa
+
+```groovy
+  pipeline {
+      agent any
+
+      stages {
+          stage('Build Docker Image') {
+              steps {
+                  script {
+                      dockerapp = docker.build("pedromarineli/fastapi-backend:${env.BUILD_ID}", '-f ./backend/Dockerfile ./backend')
+                  }
+              }
+          }
+
+          stage('Push Docker Image') {
+              steps {
+                  script {
+                      docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-cred') {
+                          dockerapp.push('latest')
+                          dockerapp.push("${env.BUILD_ID}")
+                      }
+                  }
+              }
+          }   
+
+          stage('Deploy no Kubernetes') {
+              environment {
+                  tag_version = "${env.BUILD_ID}"
+              }
+              steps {
+                  withKubeConfig([credentialsId: 'kubernetes-cred']) {
+                      sh 'sed -i "s/{{tag}}/$tag_version/g" ./backend/deployment.yaml'
+                      sh 'kubectl apply -f backend/deployment.yaml'
+                  }
+              }
+          }   
+      }
+  }
+```
+
+- Ative o trigger `GitHub hook trigger for GITScm polling` nas configuracoes da sua pipeline
+- Para expor nosso cluster publicamente, utilizaremos o ngrok (https://ngrok.com/)
+- Faca o dowload para o seu SO, e crie uma conta gratuita
+
+Ao executar o ngrok autentique com o token disponivel na dashboard apos o login e exponha o cluster (ngrok retornara uma url)
+
+```bash
+  ngrok config add-authtoken <token>
+```
+```bash
+  ngrok http http://localhost:32000
+```
+
+- No github, va para as configuracoes do seu repositorio (que deve ser o mesmo utilizado pela pipeline, inclusive a mesma branch) e crie um webhook apontando para a a url do ngrok: `<urldongrok>/github-webhook/`, o content type deve ser `application/json`
+- De um push no repositorio e veja se a pipeline ativa automaticamente
+
+
+
+
+
